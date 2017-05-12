@@ -4,5 +4,5 @@ AM_CPPFLAGS = -std=c++11 -I/${TBLIB_ROOT}/include/tbsys -I/${TBLIB_ROOT}/include
 
 bin_PROGRAMS=CmdProc
 
-CmdProc_SOURCES=main.cpp StudentCmd.cpp TeacherCmd.cpp MainCmd.cpp CmdProc.cpp CzmString.cpp
+CmdProc_SOURCES=main.cpp StudentCmd.cpp TeacherCmd.cpp MainCmd.cpp CmdProc.cpp CzmString.cpp IO.cpp
 CmdProc_LDADD=$(TBLIB_ROOT)/lib/libtbsys.a
