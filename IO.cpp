@@ -71,6 +71,7 @@ void print(const char *pFormat,...)
     TBSYS_LOG(DEBUG,"pFormat = %s,%x",pFormat,pFormat);
     TBSYS_LOG(DEBUG,"pTemp = %x",pTemp);
     TBSYS_LOG(DEBUG,"*pTemp = %x",*pTemp);
+    //TBSYS_LOG(DEBUG,"pFormat+8 = %x",(pFormat+8))
     while('\0' != *pFormat)
     {
         if('%' == *pFormat)
@@ -78,7 +79,7 @@ void print(const char *pFormat,...)
             pFormat++;
             pTemp++;
             TBSYS_LOG(DEBUG,"pTemp = %x",pTemp);
-            TBSYS_LOG(DEBUG,"*pTemp = %x",*(pTemp+1));
+            TBSYS_LOG(DEBUG,"*pTemp = %x",*pTemp);
             switch(*pFormat)
             {
             case 'd':
@@ -276,3 +277,149 @@ void scan_rewrite(const char *pFormat,...)
 		pFormat++;
 	}
 }
+
+
+
+int vsprintf(char *buf, const char *fmt, va_list args)
+{
+    int len;
+    int i;
+    char * str;
+    char *s;
+    int *ip;
+ 
+    int flags;        /* flags to number() */
+     
+        int field_width;    /* width of output field */
+        int precision;        /* min. # of digits for integers; max
+                       number of chars for from string */
+        int qualifier;        /* 'h', 'l', or 'L' for integer fields */
+     
+        for (str=buf ; *fmt ; ++fmt) {    //str为最终存放字符串的位置但是他随着字符串增长而增长，buf始终指向最终字符串的启始位置。fmt为格式字符串
+            if (*fmt != '%') {                        
+                *str++ = *fmt;              //如果不是%则表示这是需要原样打印的字符串，直接复制即可
+                continue;
+            }
+               
+            /* process flags */
+            flags = ;
+            repeat:
+                ++fmt;        /* this also skips first '%' */                            //fmt指向%的后一位
+                switch (*fmt) {
+                    case '-': flags |= LEFT; goto repeat;
+                    case '+': flags |= PLUS; goto repeat;
+                    case ' ': flags |= SPACE; goto repeat;                         //判断标志位，并设置flags
+                    case '#': flags |= SPECIAL; goto repeat;
+                    case '': flags |= ZEROPAD; goto repeat;
+                    }
+           
+            /* get field width */
+            field_width = -1;
+            if (is_digit(*fmt))
+                field_width = skip_atoi(&fmt);
+            else if (*fmt == '*') {
+                /* it's the next argument */
+                field_width = va_arg(args, int);
+                if (field_width < ) {
+                    field_width = -field_width;
+                    flags |= LEFT;
+                }
+            }
+     
+            /* get the precision */
+            precision = -1;
+            if (*fmt == '.') {
+                ++fmt;   
+                if (is_digit(*fmt))
+                    precision = skip_atoi(&fmt);
+                else if (*fmt == '*') {
+                    /* it's the next argument */
+                    precision = va_arg(args, int);
+                }
+                if (precision < )
+                    precision = ;
+            }
+     
+            /* get the conversion qualifier */
+            qualifier = -1;
+            if (*fmt == 'h' || *fmt == 'l' || *fmt == 'L') {
+                qualifier = *fmt;
+                ++fmt;
+            }
+     
+            switch (*fmt) {                                  //如果没有上面奇怪的标志位(*/./h/l/L)则fmt仍然指向%的后一位，下面判断这个标志位
+            case 'c':
+                if (!(flags & LEFT))
+                    while (--field_width > )
+                        *str++ = ' ';
+                *str++ = (unsigned char) va_arg(args, int);
+                while (--field_width > )
+                    *str++ = ' ';
+                break;
+     
+            case 's':
+                s = va_arg(args, char *);
+                len = strlen(s);
+                if (precision < )
+                    precision = len;
+                else if (len > precision)
+                    len = precision;
+     
+                if (!(flags & LEFT))
+                    while (len < field_width--)
+                        *str++ = ' ';
+                for (i = ; i < len; ++i)
+                    *str++ = *s++;
+                while (len < field_width--)
+                    *str++ = ' ';
+                break;
+     
+            case 'o':
+                str = number(str, va_arg(args, unsigned long), 8,
+                    field_width, precision, flags);
+                break;
+     
+            case 'p':
+                if (field_width == -1) {
+                    field_width = 8;
+                    flags |= ZEROPAD;
+                }
+                str = number(str,
+                    (unsigned long) va_arg(args, void *), 16,
+                    field_width, precision, flags);
+                break;
+     
+            case 'x':
+                flags |= SMALL;
+            case 'X':
+                str = number(str, va_arg(args, unsigned long), 16,
+                    field_width, precision, flags);
+                break;
+     
+    
+
+    case 'd':                                    //如果是整型，首先设定flags，然后利用number函数将可变参数取出，并根据base(这里是10)然后转换成字符串，赋给str
+            case 'i':
+                flags |= SIGN;
+            case 'u':
+                str = number(str, va_arg(args, unsigned long), 10,
+                    field_width, precision, flags);
+                break;
+     
+            case 'n':
+                ip = va_arg(args, int *);
+                *ip = (str - buf);
+                break;
+     
+            default:
+                if (*fmt != '%')//如果格式转换符不是%，则表示出错，直接打印一个%。如果是%，那么格式转换符就是%%，就由下面if(*fmt)只输出一个%
+                    *str++ = '%';
+                if (*fmt)
+                    *str++ = *fmt;//如果格式转换符不正确则输出%+不正确的格式转换符。如果是%%，则只输出一个%
+                else
+                    --fmt;//如果转换格式符不是上面这些正确的，也不是空，那么直接输出，并返回到判断fmt的for语句；否则就指向末尾了，fmt后退一位，这样在for循环自动再加1进行判断时*fmt的条件就不满足，退出for循环
+                break;
+            }
+        }
+        *str = '\0';//设定str字符串的最后一位为'\0'
+        return str-buf;//返回值为字符串的长度

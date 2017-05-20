@@ -4,7 +4,7 @@
 BEGIN_ITEM_CMD(Teacher)
 ITEM_CMD("Create","Create List",TeacherCreate)
 ITEM_CMD("Delete","Delete Node",TeacherDelete)
-ITEM_CMD("Add","Add Node"   ,TeacherAdd)
+ITEM_CMD("Add"   ,"Add Node"   ,TeacherAdd)
 ITEM_CMD("Modify","Modify Node",TeacherModify)
 ITEM_CMD("Find"  ,"Find Node"  ,TeacherFind)
 ITEM_CMD("Clear" ,"Clear List" ,TeacherClear)
