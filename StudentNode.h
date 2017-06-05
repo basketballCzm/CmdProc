@@ -6,6 +6,7 @@ struct StudentNode
 {
 	LINKER m_Linker;
 
+	TYPE m_type;
 	char m_szName[20];
 	char m_szSex[20];
 	char m_szId[20];

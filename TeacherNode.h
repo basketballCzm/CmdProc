@@ -5,6 +5,7 @@ struct TeacherNode
 {
 	LINKER m_Linker;
 
+	TYPE m_type;
 	char m_szName[255];         //mark. I do it that in order to make program be strong 
 	char m_szSex[20];
 };

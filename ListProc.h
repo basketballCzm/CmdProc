@@ -11,7 +11,7 @@ struct PFUN
 	void (*pfnOutputNode)(LINKER *pNode);
 	//I have add pfnGetName. it is no important to do.
 	LINKER* (*pfnFindNode)(LINKER *pHead, LINKER **pLast);   //if you want to change a pointer`s in function. you have to use two level pointer.
-	bool (*pfnWriteNode)(LINKER *pNode);
+	bool (*pfnWriteNode)(int nfile, LINKER *pNode);
 	char* (*pfnGetName)(LINKER *pNode);
 	TYPE (*pfnGetType)();
 };

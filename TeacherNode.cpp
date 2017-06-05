@@ -8,6 +8,7 @@ void InputTeacherNode(LINKER *pNode)
 	if(NULL != pNode)
 	{
 		TeacherNode *pTemp = (TeacherNode*)pNode;
+		pTemp->m_type = teacher;
 		printf("teacher name:");
 		scanf("%s",pTemp->m_szName);
 		printf("teacher sex:");
@@ -37,10 +38,16 @@ LINKER* FindTeacherNode(LINKER *pHead, LINKER **pLast)
 }
 
 
-bool WriteTeacherNode(LINKER *pNode)
+bool WriteTeacherNode(int nfile, LINKER *pNode)
 {
 	if(NULL != pNode)
 	{
+		int ret = write(nfile, (char*)pNode, sizeof(TeacherNode));
+		if(-1 == ret)
+		{
+			printf("%s\n","write teacher node fail!");
+			return false;
+		}
 	}
 	return true;
 }
