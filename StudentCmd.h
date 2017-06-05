@@ -9,5 +9,7 @@ bool StudentAdd();
 bool StudentFind();
 bool StudentClear();
 bool StudentModify();
+bool StudentInsert();
+bool StudentShow();
 
 #endif

@@ -14,4 +14,6 @@ googletest-release-1.7.0
 
 * if you are zhouran. you maybe can run this program,and you can write printf and scanf in single .cpp file first.
 
+---
+
 * I want to write rewrite printf and scanf. but I can not achieve it in Centos7 64 bit. I write print and scan in IO file. if you want to help me solve it .you can visit my blog  http://czm.farbox.com/post/2017-05-16  .I record the detail in it.

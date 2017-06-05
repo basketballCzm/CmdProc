@@ -3,6 +3,7 @@
 #include <tblog.h>
 #include "CmdProc.h"
 #include "MainCmd.h"
+#include "ListProc.h"
 #define N 7
 //this is a across-perform exercise
 /* Windows: WIN32
@@ -19,7 +20,17 @@
 #elif defined _MSC_VER
 #include <windows.h>
 #endif
+
+#if defined __GNUC__
+#include <stdlib.h>
+#define CLEAR "clear"
+#elif defined _MSC_VER
+#include <windows.h>
+#define CLEAR "cls"
+#endif
+
 //mark，before you write Makefile you should pay attention to the GET_CMD_MAP(Main) object should have been define
+//在编写Makefile.am的过程中.cpp的文件放置的顺序是要按照一定的规则进行排列
 CMD_MAP *g_EntryCmd = GET_CMD_MAP(Main);
 
 bool CmdProc(const char *pStrInfo)
@@ -77,9 +88,29 @@ bool Help()
 	}
 	return true;
 }
+
+bool Back()
+{
+	g_EntryCmd = GET_CMD_MAP(Main);
+	system(CLEAR);
+	printf("Main interface\n");
+	Help();
+	return true;
+}
+
+bool ShowAllNode()
+{
+	if(NULL != g_pHead)
+	{
+		ShowList(g_pHead);
+	}
+	return true;
+}
+
 bool Exit()
 {
 	printf("the program will exit within one second!\n");
+	ClearList(&g_pHead);
 	Sleep(1000);
 	exit(0);
 	return true;

@@ -24,16 +24,18 @@ void OutPutTeacherNode(LINKER *pNode)
 	}
 }
 
+
 LINKER* FindTeacherNode(LINKER *pHead, LINKER **pLast)
 {
-	if(NULL != pHead)
+	if(NULL != pHead && NULL != pLast)
 	{
 		char szBuf[255] = "";
 		printf("Input the name that you want to find:");
 		scanf("%s",szBuf);
-		FIND_NODE_BY_NAME(TeacherNode,pHead,szBuf,pLast)
+		FIND_NODE_BY_NAME(teacher,pHead,szBuf,pLast)
 	}
 }
+
 
 bool WriteTeacherNode(LINKER *pNode)
 {
@@ -48,5 +50,10 @@ TYPE GetTeacherType()
 	return teacher;
 }
 
+char* GetTeacherNodeName(LINKER *pNode)
+{
+	return ((TeacherNode*)pNode)->m_szName;
+}
 
-DEFINE_CREATE_NODE(TeacherNode,InputTeacherNode,OutPutTeacherNode,FindTeacherNode,WriteTeacherNode,GetTeacherType)
+
+DEFINE_CREATE_NODE(TeacherNode,InputTeacherNode,OutPutTeacherNode,FindTeacherNode,WriteTeacherNode,GetTeacherNodeName,GetTeacherType)

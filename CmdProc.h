@@ -26,5 +26,7 @@ bool Help();
 bool Exit();
 bool Save();
 bool Load();
+bool Back();
+bool ShowAllNode();
 
 #endif

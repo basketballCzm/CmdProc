@@ -28,12 +28,13 @@ void OutPutStudentNode(LINKER *pNode)
 
 LINKER* FindStudentNode(LINKER *pHead, LINKER **pLast)
 {
-	if(NULL != pHead)
+	if(NULL != pHead && NULL != pLast)
 	{
 		char szBuf[255] = "";
 		printf("Input the name that you want to find:");
 		scanf("%s",szBuf);
-		FIND_NODE_BY_NAME(StudentNode,pHead,szBuf,pLast)
+		//if donot use GETNAME . in this hong change type will make trouble.because you should change every node for this list 
+		FIND_NODE_BY_NAME(student,pHead,szBuf,pLast)
 	}
 }
 
@@ -50,5 +51,10 @@ TYPE GetStudentType()
 	return student;
 }
 
+char* GetStudentNodeName(LINKER *pNode)
+{
+	return ((StudentNode*)pNode)->m_szName;
+}
 
-DEFINE_CREATE_NODE(StudentNode,InputStudentNode,OutPutStudentNode,FindStudentNode,WriteStudentNode,GetStudentType)
+
+DEFINE_CREATE_NODE(StudentNode,InputStudentNode,OutPutStudentNode,FindStudentNode,WriteStudentNode,GetStudentNodeName,GetStudentType)

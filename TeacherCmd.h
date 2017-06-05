@@ -8,5 +8,8 @@ bool TeacherAdd();
 bool TeacherFind();
 bool TeacherClear();
 bool TeacherModify();
+bool TeacherInsert();
+bool TeacherShow();
+
 
 #endif
